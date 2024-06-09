@@ -114,7 +114,7 @@ class Grafos:
         print()
 
 # Ejemplo de uso
-if __name__ == "__main__":
-    grafo = Grafos()
-    grafo.Transferencia("Hospital 1", "Hospital 4")
-    grafo.Transferencia("Hospital 2", "Hospital 5")
+#if __name__ == "__main__":
+#    grafo = Grafos()
+#    grafo.Transferencia("Hospital 1", "Hospital 4")
+#    grafo.Transferencia("Hospital 2", "Hospital 5")

@@ -92,42 +92,42 @@ class Avl:
             self.Recorrer(nodo.Derecho, Resultado)
             
 # Inicia el arbol AVL
-Arbol = Avl()
+#Arbol = Avl()
 
 # Funcion para ver lista de doctores
-def Ver_Doctores():
-    Resultado = []
-    Arbol.Recorrer(Arbol.Raiz, Resultado)
-    return Resultado
+#def Ver_Doctores():
+#    Resultado = []
+#    Arbol.Recorrer(Arbol.Raiz, Resultado)
+#    return Resultado
 
 # Funcion para agregar doctores
-def Agregar_Doctor(Id, Datos):
-    Datos["id"] = Id
-    Arbol.Raiz = Arbol.Insertar(Arbol.Raiz, Id, Datos)
+#def Agregar_Doctor(Id, Datos):
+#    Datos["id"] = Id
+#    Arbol.Raiz = Arbol.Insertar(Arbol.Raiz, Id, Datos)
 
 # Funcion para buscar doctores
-def Buscar_Doctor(Id):
-    nodo = Arbol.Buscar(Arbol.Raiz, Id)
-    if nodo:
-        return nodo.Valor
-    else: 
-        return "No se encontro el doctor"
+#def Buscar_Doctor(Id):
+#    nodo = Arbol.Buscar(Arbol.Raiz, Id)
+#    if nodo:
+#        return nodo.Valor
+#    else: 
+#        return "No se encontro el doctor"
     
 # Ejemplo de uso
-Agregar_Doctor(2, {"nombre": "Juan", "area": "Cardiologia"})
-Agregar_Doctor(1, {"nombre": "Maria", "area": "neurologia"})
+#Agregar_Doctor(2, {"nombre": "Juan", "area": "Cardiologia"})
+#Agregar_Doctor(1, {"nombre": "Maria", "area": "neurologia"})
 
 # Ver lista
-print("----- Lista de doctores -----")
-Doc = Ver_Doctores()
-for Doctor in Doc:
-    print(f"- Id: {Doctor['Id']}, Nombre: {Doctor['nombre']}, Area: {Doctor['area']}")
+#print("----- Lista de doctores -----")
+#Doc = Ver_Doctores()
+#for Doctor in Doc:
+#    print(f"- Id: {Doctor['Id']}, Nombre: {Doctor['nombre']}, Area: {Doctor['area']}")
 
-# Buscar
-Id_Buscado = 1
-print(f"Id bucado: {Id_Buscado}")
-Res = Buscar_Doctor(Id_Buscado)
-if isinstance(Res, dict):
-    print(f"Nombre: {Doctor['nombre']}, Area: {Doctor['area']}")
-else:
-    print(Res)
+## Buscar
+#Id_Buscado = 1
+#print(f"Id bucado: {Id_Buscado}")
+#Res = Buscar_Doctor(Id_Buscado)
+#if isinstance(Res, dict):
+#   print(f"Nombre: {Doctor['nombre']}, Area: {Doctor['area']}")
+#else:
+#    print(Res)

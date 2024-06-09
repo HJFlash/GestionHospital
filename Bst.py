@@ -66,6 +66,7 @@ class BST:
     def Buscar(self, Expediente):
         # Inicia una variable con la raiz del arbol
         Actual = self.Raiz
+        Expediente = int(Expediente)
         # Mientras actual no sea none, quedan nodos por revisar
         while Actual is not None:
             # Si el expediente buscado coincide con el actual
@@ -166,13 +167,3 @@ class BST:
             Actual.Expediente = Temp_Expediente
             # Reemplaza el nombre del nodo actual con el del sucesor
             Actual.Nombre = Temp_Nombre
-
-# Uso
-Bst = BST()
-Bst.Agregar(1, "Paciente 1")
-Bst.Agregar(2, "Paciente 2")
-Bst.Agregar(3, "Paciente 3")
-
-print(Bst.Buscar(2))
-Bst.Eliminar(2)
-print(Bst.Buscar(2))
