@@ -2,11 +2,11 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
 from Bst import BST
-from avl import ArbolAVL
+from Avl import ArbolAVL
 from Grafos import Grafos
 
 window = tk.Tk() # Crear la ventana
-window.title("Visualizador de Imagenes") # Titulo de la ventana
+window.title("Sistema de Gestión de Pacientes") # Titulo de la ventana
 altura_window = 720 # Altura de la ventana
 ancho_window = 1280 # Ancho de la ventana
 window.geometry(f"{ancho_window}x{altura_window}") # Tamaño de la ventana
