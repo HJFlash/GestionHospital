@@ -108,6 +108,7 @@ class Grafos:
         if Ruta:
             print(f"Ruta: {' -> '.join(Ruta)}")
             print(f"Distancia total: {Distancia} unidades")
+            return Ruta, Distancia
         # Imprime que no hay ruta disponible
         else:
             print(f"No hay una ruta disponible para esta transferencia")

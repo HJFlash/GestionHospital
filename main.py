@@ -2,7 +2,7 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
 from Bst import BST
-from Avl import Avl
+from avl import ArbolAVL
 from Grafos import Grafos
 
 window = tk.Tk() # Crear la ventana
@@ -39,23 +39,20 @@ label_doctor = tk.Label(window, text="Nombre del Doctor:")
 label_doctor.grid(row=0, column=2, padx=10, pady=5)
 entry_doctor = tk.Entry(window)
 entry_doctor.grid(row=0, column=3, padx=10, pady=5)
-label_area = tk.Label(window, text="Area:")
-label_area.grid(row=1, column=2, padx=10, pady=5)
-entry_area = tk.Entry(window)
-entry_area.grid(row=1, column=3, padx=10, pady=5)
+
 label_id = tk.Label(window, text="ID:")
 label_id.grid(row=2, column=2, padx=10, pady=5)
 entry_id = tk.Entry(window)
 entry_id.grid(row=2, column=3, padx=10, pady=5)
 
 # Crear una tabla para mostrar registros de doctores
-treeview_doctores = ttk.Treeview(window, columns=('Nombre', 'Area'))
+treeview_doctores = ttk.Treeview(window, columns=('Nombre', 'ID'))
 treeview_doctores.grid(row=5, column=2, columnspan=2, padx=10, pady=5)
 treeview_doctores.column('#0', width=0, stretch=tk.NO)
 treeview_doctores.heading('Nombre', text='Nombre del Doctor')
-treeview_doctores.heading('Area', text='Area de Especialidad')
+treeview_doctores.heading('ID', text='ID')
 
-arbol_doctores = Avl()
+arbol_avl = ArbolAVL()
 
 
 
@@ -71,6 +68,11 @@ label_destino = tk.Label(window, text="Hospital de Destino:")
 label_destino.grid(row=1, column=4, padx=10, pady=5)
 entry_hospital_destino = tk.Entry(window)
 entry_hospital_destino.grid(row=1, column=5, padx=10, pady=5)
+# Etiqueta y campo de entrada para el nombre del paciente
+label_nombre = tk.Label(window, text="Nombre del Paciente:")
+label_nombre.grid(row=2, column=4, padx=10, pady=5)
+entry_nombre = tk.Entry(window)
+entry_nombre.grid(row=2, column=5, padx=10, pady=5)
 
 grafo = Grafos()
 
@@ -115,31 +117,53 @@ def _rellenar_tabla(nodo):
 #Parte 2 (AVL): Mantener la lista de doctores con inserciones y búsquedas rápidas. 
 #La interfaz debe permitir a los usuarios ver, agregar y buscar doctores.
 def agregar_doctor():
-    nombre = entry_doctor.get()
-    area = entry_area.get()
-    id = int(entry_id.get())
-    arbol_doctores.Insertar(id, {"nombre": nombre, "area": area}) 
-    actualizar_tabla_doctores()
+        # Validar que los campos de entrada no estén vacíos
+        if not entry_id.get() or not entry_doctor.get():
+            print("Por favor, complete todos los campos.")
+            return
+
+        try:
+            clave = int(entry_id.get())
+            nombre = entry_doctor.get()
+            # Agregar un doctor al árbol AVL
+            arbol_avl.raiz = arbol_avl.insertar(arbol_avl.raiz, clave, nombre)
+            # Actualizar la interfaz para reflejar los cambios
+            actualizar_lista_doctores()
+            # Limpiar los campos de entrada después de agregar
+            entry_id.delete(0, tk.END)
+            entry_nombre.delete(0, tk.END)
+        except ValueError:
+            print("La clave debe ser un número entero.")
 
 def buscar_doctor():
-    nombre = entry_doctor.get()
-    doctor = arbol_doctores.Buscar(nombre)
-    if doctor:
-        messagebox.showinfo("Resultado de Búsqueda", f"Doctor encontrado: {doctor.nombre} - Área: {doctor.area}")
-    else:
-        messagebox.showinfo("Resultado de Búsqueda", "Doctor no encontrado")
+        # Validar que el campo de búsqueda no esté vacío
+        if not entry_id.get():
+            print("Por favor, ingrese la clave del doctor a buscar.")
+            return
+
+        try:
+            clave = int(entry_id.get())
+            # Buscar el doctor en el árbol AVL
+            doctor =(arbol_avl.buscar(arbol_avl.raiz, clave))
+            if doctor:
+                # Si se encuentra, mostrar la información del doctor en la interfaz
+                print(f"Doctor encontrado - Clave: {doctor.clave}, Nombre: {doctor.nombre}")
+                messagebox.showinfo("Resultado de Búsqueda", f"Doctor encontrado - Clave: {doctor.clave}, Nombre: {doctor.nombre}")
+            else:
+                print("Doctor no encontrado")
+        except ValueError:
+            print("La clave debe ser un número entero.")
 
     
-def actualizar_tabla_doctores():
-    for row in treeview_doctores.get_children():
-        treeview_doctores.delete(row)
-    _rellenar_tabla_doctores(arbol_doctores.raiz)
+def actualizar_lista_doctores():
+        # Limpiar la lista de doctores
+        for doctor in treeview_doctores.get_children():
+            treeview_doctores.delete(doctor)
 
-def _rellenar_tabla_doctores(nodo):
-    if nodo:
-        treeview_doctores.insert('', 'end', text=str(id(nodo)), values=(nodo.Nombre, nodo.Area))
-        _rellenar_tabla_doctores(nodo.Izquierda)
-        _rellenar_tabla_doctores(nodo.Derecha)
+        # Obtener la lista de doctores del árbol AVL y agregarlos a la lista de Tkinter
+        doctores = arbol_avl.obtener_lista_doctores()
+        for doctor in doctores:
+            treeview_doctores.insert("", "end", values=(doctor.clave, doctor.nombre))
 
 
 
@@ -152,7 +176,11 @@ def calcular_ruta():
     messagebox.showinfo("Ruta más corta", f"La distancia mínima entre {inicio} y {fin} es de {distancia_minima[1]} km.")
 
 def transferir_paciente():
-    pass
+    inicio = entry_hospital_origen.get()
+    fin = entry_hospital_destino.get()
+    nombre = entry_nombre.get()
+    transferencia_ruta = grafo.Transferencia(inicio, fin)
+    messagebox.showinfo("Transferencia de Paciente",f" Se transfiere al paciente llamado: {nombre} desde el Origen: {inicio}  al Destino: {fin}, siguiendo la siguiente ruta: Ruta: {' -> '.join(transferencia_ruta[0])} con una distancia de {transferencia_ruta[1]} km" )
 
 
 # Botones para agregar, buscar y eliminar registros
@@ -174,9 +202,9 @@ btn_buscar_doctor.grid(row=4, column=2, columnspan=2, padx=10, pady=5, sticky="W
 
 # Botones para calcular ruta y transferir paciente
 btn_calcular_ruta = tk.Button(window, text="Calcular Ruta", command=calcular_ruta)
-btn_calcular_ruta.grid(row=2, column=4, columnspan=2, padx=10, pady=5, sticky="WE")
+btn_calcular_ruta.grid(row=3, column=4, columnspan=2, padx=10, pady=5, sticky="WE")
 btn_transferir_paciente = tk.Button(window, text="Transferir Paciente", command=transferir_paciente)
-btn_transferir_paciente.grid(row=3, column=4, columnspan=2, padx=10, pady=5, sticky="WE")
+btn_transferir_paciente.grid(row=4, column=4, columnspan=2, padx=10, pady=5, sticky="WE")
 
 
 

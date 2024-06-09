@@ -1,133 +1,142 @@
-# Representa un nodo en el arbol
-class Nodo:
-    def __init__(self, Clave, Valor):
-        self.Clave = Clave # Clave para ordenar el nodo
-        self.Valor = Valor # Valor asociado a la clave
-        self.Izquierdo = None # Hijo izquierdo del nodo
-        self.Derecho = None # Hijo derecho del nodo
-        self.Altura = 1 # Altura del nodo
 
-# Clase del arbol AVL
-class Avl:
+
+class NodoAVL:
+    def __init__(self, clave, nombre):
+        self.clave = clave
+        self.nombre = nombre
+        self.altura = 1
+        self.izquierda = None
+        self.derecha = None
+
+class ArbolAVL:
     def __init__(self):
-        self.Raiz = None # Raiz del arbol
-        
-    # Funcion para obtener altura del nodo
-    def Obtener_Altura(self, nodo):
+        self.raiz = None
+
+    def obtener_altura(self, nodo):
         if not nodo:
             return 0
-        return nodo.Altura
-    
-    # Funcion para obtener factor de balance del nodo
-    def Obtener_Balance(self, nodo):
+        return nodo.altura
+
+    def obtener_balance(self, nodo):
         if not nodo:
             return 0
-        return self.Obtener_Altura(nodo.Izquierda) - self.Obtener_Altura(nodo.Derecho)
-    
-    # Rotacion Derecha
-    def Rotacion_Derecha(self, y):
-        x = y.Izquierdo
-        T2 = x.Derecho
-        x.Derecho = y
-        y.Izquierdo = T2
-        y.Altura = max(self.Obtener_Altura(y.Izquierdo), self.Obtener_Altura(y.Derecho)) + 1
-        x.Altura = max(self.Obtener_Altura(x.Izquierdo), self.Obtener_Altura(x.Derecho)) + 1
+        return self.obtener_altura(nodo.izquierda) - self.obtener_altura(nodo.derecha)
+
+    def rotacion_derecha(self, y):
+        x = y.izquierda
+        T2 = x.derecha
+        x.derecha = y
+        y.izquierda = T2
+        y.altura = max(self.obtener_altura(y.izquierda), self.obtener_altura(y.derecha)) + 1
+        x.altura = max(self.obtener_altura(x.izquierda), self.obtener_altura(x.derecha)) + 1
         return x
-    
-    # Rotacion Izquierda
-    def Rotacion_Izquierda(self, x):
-        y = x.Izquierdo
-        T2 = y.Derecho
-        y.Izquierdo = x
-        x.Derecho = T2
-        x.Altura = max(self.Obtener_Altura(x.Izquierdo), self.Obtener_Altura(x.Derecho)) + 1
-        y.Altura = max(self.Obtener_Altura(y.Izquierdo), self.Obtener_Altura(y.Derecho)) + 1
+
+    def rotacion_izquierda(self, x):
+        y = x.derecha
+        T2 = y.izquierda
+        y.izquierda = x
+        x.derecha = T2
+        x.altura = max(self.obtener_altura(x.izquierda), self.obtener_altura(x.derecha)) + 1
+        y.altura = max(self.obtener_altura(y.izquierda), self.obtener_altura(y.derecha)) + 1
         return y
-    
-    # Funcion para insertar un nodo
-    def Insertar(self, nodo, Clave, Valor):
-        if not nodo:
-            return Nodo(Clave, Valor)
-        elif Clave < nodo.Clave:
-            nodo.Izquierdo = self.Insertar(nodo.Izquierdo, Clave, Valor)
+
+    def insertar(self, raiz, clave, nombre):
+        if not raiz:
+            return NodoAVL(clave, nombre)
+        elif clave < raiz.clave:
+            raiz.izquierda = self.insertar(raiz.izquierda, clave, nombre)
         else:
-            nodo.Derecho = self.Insertar(nodo.Derecho, Clave, Valor)
+            raiz.derecha = self.insertar(raiz.derecha, clave, nombre)
+
+        raiz.altura = max(self.obtener_altura(raiz.izquierda), self.obtener_altura(raiz.derecha)) + 1
+
+        balance = self.obtener_balance(raiz)
+
+        # Rotaciones para mantener el árbol balanceado
+        if balance > 1 and clave < raiz.izquierda.clave:
+            return self.rotacion_derecha(raiz)
+        if balance < -1 and clave > raiz.derecha.clave:
+            return self.rotacion_izquierda(raiz)
+        if balance > 1 and clave > raiz.izquierda.clave:
+            raiz.izquierda = self.rotacion_izquierda(raiz.izquierda)
+            return self.rotacion_derecha(raiz)
+        if balance < -1 and clave < raiz.derecha.clave:
+            raiz.derecha = self.rotacion_derecha(raiz.derecha)
+            return self.rotacion_izquierda(raiz)
+
+        return raiz
+
+    def buscar(self, raiz, clave):
+        if not raiz or raiz.clave == clave:
+            return raiz
+        elif clave < raiz.clave:
+            return self.buscar(raiz.izquierda, clave)
+        else:
+            return self.buscar(raiz.derecha, clave)
+
+    def eliminar(self, raiz, clave):
+        if not raiz:
+            return raiz
         
-        # Actualiza la altura del nodo ancestro
-        nodo.Altura = max(self.Obtener_Altura(nodo.Izquierdo), self.Obtener_Altura(nodo.Derecho)) +1
-        # Obtiene el factor de balance del nodo ancestro
-        Balance = self.Obtener_Balance(nodo)
-        
-        # Rotaciones para balancear el arbol
-        # Rotacion derecha
-        if (Balance > 1) and (Clave < nodo.Izquierdo.Clave):
-            return self.Rotacion_Derecha(nodo)
-        # Rotacion izquierda
-        if (Balance < -1) and (Clave > nodo.Derecho.Clave):
-            return self.Rotacion_Izquierda(nodo)
-        # Rotacion izquierda - derecha
-        if (Balance > 1) and (Clave > nodo.Izquierdo.Clave):
-            nodo.Izquierdo = self.Rotacion_Izquierda(nodo.Izquierdo)
-            return self.Rotacion_Derecha(nodo)
-        # Rotacion derecha - izquierda
-        if (Balance < -1) and (Clave < nodo.Derecho.Clave):
-            nodo.Derecho = self.Rotacion_Derecha(nodo.Derecho)
-            return self.Rotacion_Izquierda(nodo)
-        
-        return nodo
-    
-    # Funcion para buscar nodo
-    def Buscar(self, nodo, Clave):
-        if not nodo or (nodo.Clave == Clave):
-            return nodo
-        elif (Clave < nodo.Clave):
-            return self.Buscar(nodo.Izquierdo, Clave)
-        return self.Buscar(nodo.Derecho, Clave)
-    
-    # Funcion para recorrer el arbol en orden
-    def Recorrer(self, nodo, Resultado):
-        if nodo:
-            self.Recorrer(nodo.Izquierdo, Resultado)
-            Resultado.append(nodo.Valor)
-            self.Recorrer(nodo.Derecho, Resultado)
-            
-# Inicia el arbol AVL
-#Arbol = Avl()
+        if clave < raiz.clave:
+            raiz.izquierda = self.eliminar(raiz.izquierda, clave)
+        elif clave > raiz.clave:
+            raiz.derecha = self.eliminar(raiz.derecha, clave)
+        else:
+            if raiz.izquierda is None:
+                temp = raiz.derecha
+                raiz = None
+                return temp
+            elif raiz.derecha is None:
+                temp = raiz.izquierda
+                raiz = None
+                return temp
 
-# Funcion para ver lista de doctores
-#def Ver_Doctores():
-#    Resultado = []
-#    Arbol.Recorrer(Arbol.Raiz, Resultado)
-#    return Resultado
+            temp = self.min_valor_nodo(raiz.derecha)
+            raiz.clave = temp.clave
+            raiz.derecha = self.eliminar(raiz.derecha, temp.clave)
 
-# Funcion para agregar doctores
-#def Agregar_Doctor(Id, Datos):
-#    Datos["id"] = Id
-#    Arbol.Raiz = Arbol.Insertar(Arbol.Raiz, Id, Datos)
+        if raiz is None:
+            return raiz
 
-# Funcion para buscar doctores
-#def Buscar_Doctor(Id):
-#    nodo = Arbol.Buscar(Arbol.Raiz, Id)
-#    if nodo:
-#        return nodo.Valor
-#    else: 
-#        return "No se encontro el doctor"
-    
-# Ejemplo de uso
-#Agregar_Doctor(2, {"nombre": "Juan", "area": "Cardiologia"})
-#Agregar_Doctor(1, {"nombre": "Maria", "area": "neurologia"})
+        raiz.altura = 1 + max(self.obtener_altura(raiz.izquierda), self.obtener_altura(raiz.derecha))
+        balance = self.obtener_balance(raiz)
 
-# Ver lista
-#print("----- Lista de doctores -----")
-#Doc = Ver_Doctores()
-#for Doctor in Doc:
-#    print(f"- Id: {Doctor['Id']}, Nombre: {Doctor['nombre']}, Area: {Doctor['area']}")
+        # Rotaciones para mantener el árbol balanceado
+        if balance > 1 and self.obtener_balance(raiz.izquierda) >= 0:
+            return self.rotacion_derecha(raiz)
+        if balance < -1 and self.obtener_balance(raiz.derecha) <= 0:
+            return self.rotacion_izquierda(raiz)
+        if balance > 1 and self.obtener_balance(raiz.izquierda) < 0:
+            raiz.izquierda = self.rotacion_izquierda(raiz.izquierda)
+            return self.rotacion_derecha(raiz)
+        if balance < -1 and self.obtener_balance(raiz.derecha) > 0:
+            raiz.derecha = self.rotacion_derecha(raiz.derecha)
+            return self.rotacion_izquierda(raiz)
 
-## Buscar
-#Id_Buscado = 1
-#print(f"Id bucado: {Id_Buscado}")
-#Res = Buscar_Doctor(Id_Buscado)
-#if isinstance(Res, dict):
-#   print(f"Nombre: {Doctor['nombre']}, Area: {Doctor['area']}")
-#else:
-#    print(Res)
+        return raiz
+
+    def min_valor_nodo(self, nodo):
+        actual = nodo
+
+        while actual.izquierda is not None:
+            actual = actual.izquierda
+
+        return actual
+
+    def imprimir_in_order(self, raiz):
+        if raiz:
+            self.imprimir_in_order(raiz.izquierda)
+            print(f"Clave: {raiz.clave}, Nombre: {raiz.nombre}")
+            self.imprimir_in_order(raiz.derecha)
+
+    def obtener_lista_doctores(self):
+        doctores = []
+        self._in_order_traversal(self.raiz, doctores)
+        return doctores
+
+    def _in_order_traversal(self, nodo, doctores):
+        if nodo is not None:
+            self._in_order_traversal(nodo.izquierda, doctores)
+            doctores.append(nodo)
+            self._in_order_traversal(nodo.derecha, doctores)
