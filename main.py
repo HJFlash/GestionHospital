@@ -69,10 +69,10 @@ label_destino.grid(row=1, column=4, padx=10, pady=5)
 entry_hospital_destino = tk.Entry(window)
 entry_hospital_destino.grid(row=1, column=5, padx=10, pady=5)
 # Etiqueta y campo de entrada para el nombre del paciente
-label_nombre = tk.Label(window, text="Nombre del Paciente:")
-label_nombre.grid(row=2, column=4, padx=10, pady=5)
-entry_nombre = tk.Entry(window)
-entry_nombre.grid(row=2, column=5, padx=10, pady=5)
+label_nombre_transf = tk.Label(window, text="Nombre del Paciente:")
+label_nombre_transf.grid(row=2, column=4, padx=10, pady=5)
+entry_nombre_transf = tk.Entry(window)
+entry_nombre_transf.grid(row=2, column=5, padx=10, pady=5)
 
 grafo = Grafos()
 
@@ -178,7 +178,7 @@ def calcular_ruta():
 def transferir_paciente():
     inicio = entry_hospital_origen.get()
     fin = entry_hospital_destino.get()
-    nombre = entry_nombre.get()
+    nombre = entry_nombre_transf.get()
     transferencia_ruta = grafo.Transferencia(inicio, fin)
     messagebox.showinfo("Transferencia de Paciente",f" Se transfiere al paciente llamado: {nombre} desde el Origen: {inicio}  al Destino: {fin}, siguiendo la siguiente ruta: Ruta: {' -> '.join(transferencia_ruta[0])} con una distancia de {transferencia_ruta[1]} km" )
 
