@@ -21,14 +21,14 @@ class Grafos:
         Distancia = {Nodo: float("inf") for Nodo in self.Grafo}
         # Distancia al nodo de inicio es cero
         Distancia[Inicio] = 0
-        # Inicia los predecesores de cada noso, inicialmente ninguno
+        # Inicia los predecesores de cada nodo, inicialmente ninguno
         Previo = {Nodo: None for Nodo in self.Grafo}
         # Conjunto que lleva la cuenta de nodos visitados
         Visitados = set()
         # Lista de nodos del grafo
         Nodos = list(self.Grafo.keys())
         
-        # Mientras no hayan nodos
+        # Mientras haya nodos
         while Nodos:
             Nodo_Minimo = None
             Distancia_Minima = float("inf")
@@ -87,7 +87,7 @@ class Grafos:
         # Obtiene las distancias y los predecesores utilizando Dijkstra
         Distancia, Previo = self.Dijkstra(Origen)
         
-        # Si la distancia es inficina no hay ruta disponible
+        # Si la distancia es infinita no hay ruta disponible
         if Distancia[Destino] == float("inf"):
             return None, float("inf")
         
@@ -112,6 +112,7 @@ class Grafos:
         # Imprime que no hay ruta disponible
         else:
             print(f"No hay una ruta disponible para esta transferencia")
+            return None, float("inf")
         print()
 
 # Ejemplo de uso
@@ -119,3 +120,4 @@ class Grafos:
 #    grafo = Grafos()
 #    grafo.Transferencia("Hospital 1", "Hospital 4")
 #    grafo.Transferencia("Hospital 2", "Hospital 5")
+#    grafo.Transferencia("Hospital 1", "Hospital 5")

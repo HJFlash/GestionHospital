@@ -2,7 +2,7 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
 from Bst import BST
-from Avl import ArbolAVL
+from avl import ArbolAVL
 from Grafos import Grafos
 
 window = tk.Tk() # Crear la ventana
@@ -182,14 +182,20 @@ def calcular_ruta():# Función para calcular la ruta más corta entre dos hospit
     inicio = entry_hospital_origen.get()# Obtener el hospital de origen
     fin = entry_hospital_destino.get()# Obtener el hospital de destino
     distancia_minima = grafo.Ruta_Mas_Corta(inicio, fin)# Calcular la ruta más corta
-    messagebox.showinfo("Ruta más corta", f"La distancia mínima entre {inicio} y {fin} es de {distancia_minima[1]} km.")# Mostrar la distancia mínima en una ventana emergente
+    if distancia_minima == (None, float("inf")):# Si no hay ruta disponible
+        messagebox.showinfo("Ruta más corta", f"No hay una ruta disponible entre {inicio} y {fin}.")
+    else: 
+        messagebox.showinfo("Ruta más corta", f"La distancia mínima entre {inicio} y {fin} es de {distancia_minima[1]} km.")# Mostrar la distancia mínima en una ventana emergente
 
 def transferir_paciente():# Función para transferir un paciente de un hospital a otro
     inicio = entry_hospital_origen.get()# Obtener el hospital de origen
     fin = entry_hospital_destino.get()# Obtener el hospital de destino
     nombre = entry_nombre_transf.get()# Obtener el nombre del paciente
     transferencia_ruta = grafo.Transferencia(inicio, fin)# Calcular la ruta de transferencia
-    messagebox.showinfo("Transferencia de Paciente",f" Se transfiere al paciente llamado: {nombre} \nDesde el Origen: {inicio}  al Destino: {fin}\nSiguiendo la siguiente ruta: Ruta: {' -> '.join(transferencia_ruta[0])} con una distancia de {transferencia_ruta[1]} km" )
+    if transferencia_ruta == (None, float("inf")):
+        messagebox.showinfo("Transferencia de Paciente", f"No hay una ruta disponible para transferir al paciente llamado: {nombre} desde {inicio} a {fin}.")
+    else:
+        messagebox.showinfo("Transferencia de Paciente",f" Se transfiere al paciente llamado: {nombre} \nDesde el Origen: {inicio}  al Destino: {fin}\nSiguiendo la siguiente ruta: Ruta: {' -> '.join(transferencia_ruta[0])} con una distancia de {transferencia_ruta[1]} km" )
     # Mostrar la ruta de transferencia en una ventana emergente
 
 # Botones para agregar, buscar y eliminar registros
