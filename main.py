@@ -2,7 +2,7 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
 from Bst import BST
-from avl import ArbolAVL
+from Avl import ArbolAVL
 from Grafos import Grafos
 
 window = tk.Tk() # Crear la ventana
